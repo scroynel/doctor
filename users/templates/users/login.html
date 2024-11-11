@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<div class="">
+
+
+    <div class="w-1/4 mx-auto text-center">
+        <h1 class="text-3xl">Log In</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="text-red-600">{{ form.non_field_errors }}</div>
+            {% for f in form %}
+            <div class="mt-4 w-full">
+                {{f}}
+            </div>
+            <div class="text-red-600">{{f.errors}}</div>
+            {% endfor %}
+            <p class="mt-2">Are you not register? <a href="{% url 'users:register' %}" class="underline">Register</a></p>
+            <p class="mt-2">Did you forgot a password? <a href="{% url 'users:password_reset' %}" class="underline">Password confirmation</a></p>
+            <button type="submit" class="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Log In</button>
+        </form>
+    </div>
+
+</div>
+
+
+{% endblock %}

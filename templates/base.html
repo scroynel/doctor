@@ -1,0 +1,78 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'doctor/css/style.css' %}">
+    {% tailwind_css %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header>
+        <nav class="dark:bg-gray-700 w-full border-gray-600">
+            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 px-14">
+                <a href="{% url 'main' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="{% static  'doctor/images/logo.png' %}" class="h-12" alt="Flowbite Logo">
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Doctor</span>
+                </a>
+                <div class="flex md:order-2 items-center space-x-4">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'users:profile' user.pk %}" class="text-white">{{user.username|upper}}</a>
+                    <form method="POST" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Log Out</button>
+                    </form>  
+                    {% else %}
+                    <a href="{% url 'users:login' %}" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Log In</a>
+                    {% endif %}
+                </div>
+                <!-- <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    {% if user.is_authenticated %}
+                    <div class="grid grid-cols-2 items-center text-center">
+                        <a href="{% url 'users:profile' user.pk %}" class="text-white">{{user.username|upper}}</a>
+                        <form method="POST" action="{% url 'users:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Log Out</button>
+                        </form>
+                    </div>   
+                    {% else %}
+                    <a href="{% url 'users:login' %}" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Log In</a>
+                    {% endif %}
+                </div> -->
+                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                    <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-gray-700">
+                        <li>
+                            <a href="{% url 'main' %}" class="block py-2 px-3 text-blue-500" aria-current="page">Doctors</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block py-2 px-3 text-white hover:text-blue-500">About</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block py-2 px-3 text-white hover:text-blue-500">Services</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block py-2 px-3 text-white hover:text-blue-500">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+        </nav>
+    </header>
+    <div class="grow">
+            {% block content %}
+            {% endblock content %}
+    </div>
+    <footer class="w-full h-56 bg-gray-700">
+        <div class="max-w-screen-xl">
+
+        </div>
+    </footer>  
+    {% block script %}
+    {% endblock %}
+</body>
+</html>

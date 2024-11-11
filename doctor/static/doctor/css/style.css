@@ -1,0 +1,29 @@
+/* own styles */
+.label {
+    cursor: pointer;
+}
+
+i.fa-star {
+    color: orange;
+    font-size: 30px;
+}
+
+.input:checked ~ .label .fa-star {
+    color: #ddd;
+}
+
+.input:hover ~ .label .fa-star {
+    color: #ddd;
+}
+
+.comment .fa-star{
+    font-size: 15px;
+}
+
+.color-off {
+    color: #ddd;
+}
+
+.color-on {
+    color: orange;
+}

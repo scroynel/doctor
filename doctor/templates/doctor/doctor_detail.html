@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}{{doctor.name}} {{doctor.surname}}{% endblock %}
+
+{% block content %}
+<div class="max-w-screen-xl mx-auto p-4">
+    <div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
+        {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
+        <a class="content-center" href="{{request.META.HTTP_REFERER}}">⭠Back</a>
+        {% else %}
+        <a class="content-center" href="{% url 'main' %}">⭠Back</a>
+        {% endif %}
+        {% if doctor.owner != request.user %}
+        <button type="button" class="text-white hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-4 py-2 text-center bg-gray-600">Visit</button>
+        {% endif %}
+    </div>
+    <div class="flex my-20 space-x-10">
+        <div class="w-1/3">
+            <img class="w-[100px] h-[100px] object-contain object-top rounded-full border border-gray-700" src="{{doctor.image.url}}" alt="">
+            <h1 class="text-2xl">{{doctor.name}} {{doctor.surname}}</h1>
+            <p class="text-md">{{doctor.specialty}}</p>
+            <p class="mt-10">{{doctor.description|truncatewords:30|slice:-2}} <button onclick="show_descrip()" class="text-blue-500">More...</button></p>       
+            <div onclick="close_descrip()" id="descrip" class="fixed top-0 left-0 bg-black bg-opacity-50 w-screen h-screen hidden justify-center opacity-0 items-center transition-opacity duration-500">
+                <div onclick="event.stopImmediatePropagation()" class="relative bg-white w-[40%] p-4 rounded-xl">
+                    <h1 class="text-center font-bold">Doctor's description</h1>
+                    <p class="mt-2">{{doctor.description}}</p>
+                    <button onclick="close_descrip()" class="absolute right-2 top-2">                    
+                        <svg width="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="mt-10 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Appointment</button>
+        </div>
+        <div class="bg-gray-100 rounded-xl text-center w-2/3 px-4 pb-4">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="mt-4 w-full flex space-x-5 items-center justify-end">
+                    <div><p>Select rating: </p></div>
+                    <div>
+                        <label class="label" for="star-1">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                        </label>
+                        <input class="input hidden" type="radio" id="star-1" name="star" value="1">
+                        <label class="label" for="star-2">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="input hidden" type="radio" id="star-2" name="star" value="2">
+                        <label class="label" for="star-3">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="input hidden" type="radio" id="star-3" name="star" value="3">
+                        <label class="label" for="star-4">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="input hidden" type="radio" id="star-4" name="star" value="4">
+                        <label class="label" for="star-5">
+                            <i class="fa fa-star"></i>
+                        </label>
+                        <input class="input hidden" type="radio" id="star-5" name="star" value="5" checked>
+                    </div>
+                </div>
+                <div class="text-red-600">{{ form.non_field_errors }}</div>
+                <div>{{form.errors}}</div>
+                <div class="mt-4 w-full">
+                    {{form.description}}
+                </div>
+                <div class="text-red-600">{{form.description.errors}}</div>
+                {% if doctor.owner == request.user %}
+                <button type="submit" disabled class="group relative hover::after:content-[attr(data-title)] w-full mt-5 text-white rounded-lg disabled:bg-gray-300 py-2 px-4">Comment
+                    <p class="absolute bg-gray-500 p-2 rounded-lg text-white hidden group-hover:block right-0 bottom-11">You can't add comments to your doctor! <span class="before:content-['▾'] absolute top-7 right-1/2"></span></p>
+                </button>
+                {% else %}
+                <button type="submit" class="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Comment</button>
+                {% endif %}
+            </form>
+            {% for i in doctor.comment.all %}
+                {{i.star}}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function show_descrip(){
+        descrip = document.getElementById('descrip')
+        descrip.classList.remove('hidden')
+        descrip.classList.add('flex')
+        setTimeout(() => {
+            descrip.classList.add('opacity-100')
+        }, 20)
+    }
+
+    function close_descrip(){
+        descrip = document.getElementById('descrip')
+        descrip.classList.add('opacity-0')
+        descrip.classList.remove('opacity-100')
+        setTimeout(() => {
+            descrip.classList.add('hidden')
+            descrip.classList.remove('flex')
+        },500)
+    }
+</script>
+{% endblock %}
