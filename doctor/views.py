@@ -7,6 +7,8 @@ from django.http import HttpResponseForbidden
 from .models import Doctor, number_of_doctor
 from .forms import DoctorAddFrom, CommentAddFrom
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from .decorators import only_for_doctors
 
 
 class MainView(ListView):
@@ -61,6 +63,7 @@ class DoctorDetailView(FormMixin, DetailView):
         return super(DoctorDetailView, self).form_valid(form)
      
 
+@method_decorator(only_for_doctors('Doctors'), 'dispatch')
 class DoctorAddView(LoginRequiredMixin, CreateView):
     model = Doctor
     excludes = ['slug']
@@ -78,7 +81,7 @@ class DoctorAddView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
         
     
-
+@method_decorator(only_for_doctors('Doctors'), 'dispatch')
 class DoctorUpdateView(LoginRequiredMixin, UpdateView):
     model = Doctor
     template_name = 'doctor/doctor_edit.html'
