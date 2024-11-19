@@ -70,3 +70,14 @@ class DoctorFeedback(models.Model):
     
     class Meta:
         ordering = ['-time_create']
+
+
+class Notification(models.Model):
+    is_read = models.BooleanField(default=False)
+    message = models.TextField()
+    time_create = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='notification')
+
+
+    def get_absolute_url(self):
+        return reverse('doctor_detail', kwargs={'doctor_slug': self.user.doctor.slug})

@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, UpdateView, CreateView, F
 from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseForbidden
-from .models import Doctor, number_of_doctor
+from .models import Doctor, number_of_doctor, Notification
 from .forms import DoctorAddFrom, CommentAddFrom
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
@@ -42,7 +42,7 @@ class DoctorDetailView(FormMixin, DetailView):
         context['form'] = self.get_form()
         return context
     
-
+       
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if not request.user.is_authenticated:
@@ -54,12 +54,13 @@ class DoctorDetailView(FormMixin, DetailView):
         else:
             return self.form_invalid(form)
    
-
+  
     def form_valid(self, form):
         f = form.save(commit=False)
         f.doctor = self.get_object()
         f.from_user = self.request.user
         f.save()
+        Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.')  
         return super(DoctorDetailView, self).form_valid(form)
      
 
@@ -105,4 +106,3 @@ class DoctorsBySpecialty(ListView):
 
     def get_queryset(self):
         return Doctor.objects.filter(specialty__slug=self.kwargs['specialty_slug'])
-    

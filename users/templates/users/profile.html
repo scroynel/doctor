@@ -53,6 +53,23 @@
             </div>
         </div>
     </div>
+    {% if profile.notification %}
+    <div>
+        <h1 class="text-xl mt-10">Notifications</h1>
+        {% for n in profile.notification.all %}
+        <a href="{{profile.notification.get_absolute_url}}">
+            {% if n.is_read %}
+            <div class="my-3 p-2 bg-gray-100 rounded-xl flex justify-between">
+            {% else %}
+            <div class="my-3 p-2 bg-blue-600 text-white rounded-xl flex justify-between">
+            {% endif %}
+                <div>{{n.message}}</div>
+                <div class="text-gray-400">{{n.time_create|date:'d M Y - H:i'}}</div>
+            </div> 
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
     {% endif %}
 </div>
 {% endblock %}

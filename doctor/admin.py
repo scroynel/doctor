@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Doctor, Specialty, DoctorFeedback
+from .models import Doctor, Specialty, DoctorFeedback, Notification
 
 
 @admin.register(Doctor)
@@ -30,3 +30,8 @@ class SpecialtyAdmin(admin.ModelAdmin):
 @admin.register(DoctorFeedback)
 class DoctorFeedbackAdmin(admin.ModelAdmin):
     list_display = ['id', 'doctor', 'from_user', 'description', 'star', 'time_create']
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['id', 'message', 'user', 'time_create', 'is_read']
