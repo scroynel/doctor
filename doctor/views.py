@@ -2,10 +2,10 @@ from django.db.models.base import Model as Model
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, FormView
 from django.views.generic.edit import FormMixin
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseForbidden
-from .models import Doctor, number_of_doctor, Notification
-from .forms import DoctorAddFrom, CommentAddFrom
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponse
+from .models import Doctor, number_of_doctor, Notification, Appointment
+from .forms import DoctorAddFrom, CommentAddFrom, DateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from .decorators import only_for_doctors
@@ -21,13 +21,13 @@ class MainView(ListView):
         return Doctor.objects.all()
     
 
-class DoctorDetailView(FormMixin, DetailView):
-    model=Doctor
+class DoctorDetailView(DetailView, FormMixin):
+    model = Doctor
     template_name = 'doctor/doctor_detail.html'
     slug_url_kwarg = 'doctor_slug'
     context_object_name = 'doctor'
     form_class = CommentAddFrom
-
+    second_form_class = DateForm
 
     def get_object(self):
         return get_object_or_404(Doctor, slug=self.kwargs[self.slug_url_kwarg])
@@ -39,29 +39,51 @@ class DoctorDetailView(FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DoctorDetailView, self).get_context_data(**kwargs)
-        context['form'] = self.get_form()
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class()
         return context
     
-       
+
+    def form_invalid(self, **kwargs):
+        return self.render_to_response(self.get_context_data(**kwargs))
+
+
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if not request.user.is_authenticated:
-            return HttpResponseForbidden()
         self.object = self.get_object()
-        
-        if form.is_valid():
-            return self.form_valid(form)
+
+        if 'form' in request.POST:
+            form_class = self.form_class(request.POST)
+            if form_class.is_valid():
+                f = form_class.save(commit=False)
+                f.doctor = self.get_object()
+                f.from_user = self.request.user
+                f.save()
+                Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.') 
+                return redirect('main')
+            else:
+                return self.form_invalid(form_class)
         else:
-            return self.form_invalid(form)
-   
-  
-    def form_valid(self, form):
-        f = form.save(commit=False)
-        f.doctor = self.get_object()
-        f.from_user = self.request.user
-        f.save()
-        Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.')  
-        return super(DoctorDetailView, self).form_valid(form)
+            form_class = self.second_form_class(request.POST)
+            if form_class.is_valid():
+                print(form_class)
+                print('form_class')
+                f = form_class.save(commit=False)
+                f.doctor = self.get_object()
+                f.patient = request.user
+                f.save()
+                return redirect('users:profile', request.user.id)
+            else:
+                return self.form_invalid(form_class)
+
+    # def form_valid(self, form):
+    #     # f = form.save(commit=False)
+    #     # f.doctor = self.get_object()
+    #     # f.from_user = self.request.user
+    #     # f.save()
+    #     # Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.')  
+    #     return super(DoctorDetailView, self).form_valid(form)
      
 
 @method_decorator(only_for_doctors('Doctors'), 'dispatch')

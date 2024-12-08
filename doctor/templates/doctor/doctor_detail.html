@@ -31,7 +31,18 @@
                     </button>
                 </div>
             </div>
-            <button type="button" class="mt-10 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Appointment</button>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{form2.appointment_date}}
+                {% if request.user.is_authenticated %}
+                <button type="submit" name="form2" class="mt-10 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Appointment</button>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="mt-10 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Appointment</a>
+                {% endif %}
+            </form>
+           
+            
         </div>
         <div class="bg-gray-100 rounded-xl text-center w-2/3 px-4 pb-4">
             <form action="" method="POST">
@@ -72,7 +83,7 @@
                     <p class="absolute bg-gray-500 p-2 rounded-lg text-white hidden group-hover:block right-0 bottom-11">You can't add comments to your doctor! <span class="before:content-['▾'] absolute top-7 right-1/2"></span></p>
                 </button>
                 {% else %}
-                <button type="submit" class="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Comment</button>
+                <button type="submit" name="form" class="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Comment</button>
                 {% endif %}
             </form>
             <hr class="mt-5 border-black">
@@ -111,6 +122,18 @@
 
 {% block script %}
 <script>
+    const minimalDate = new Date()
+
+    $(function () {
+        $("#id_appointment_date").datetimepicker({
+            minDate: minimalDate,
+            allowTimes: [
+                '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'
+            ]
+        });
+    });
+
+    
     function show_descrip(){
         descrip = document.getElementById('descrip')
         descrip.classList.remove('hidden')
@@ -119,6 +142,7 @@
             descrip.classList.add('opacity-100')
         }, 20)
     }
+
 
     function close_descrip(){
         descrip = document.getElementById('descrip')

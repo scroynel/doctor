@@ -1,7 +1,7 @@
 from django import forms
-from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
-from .models import Doctor, Specialty, DoctorFeedback
+from .models import Doctor, Specialty, DoctorFeedback, Appointment
+from project.settings import DATETIME_INPUT_FORMATS
 
 
 class DoctorAddFrom(forms.ModelForm):
@@ -37,5 +37,17 @@ class CommentAddFrom(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CommentAddFrom, self).__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'w-full rounded-xl', 'placeholder': f'{f.capitalize()}', 'rows': '3'})
+        self.fields['description'].widget.attrs.update({'class': 'w-full rounded-xl', 'placeholder': 'Description...', 'rows': '3'})
+
+
+class DateForm(forms.ModelForm):
+    appointment_date = forms.DateTimeField(input_formats=DATETIME_INPUT_FORMATS, widget=forms.DateTimeInput(format=DATETIME_INPUT_FORMATS))
+
+
+    class Meta:
+        model = Appointment
+        fields = ['appointment_date']
+
+    def __init__(self, *args, **kwargs):
+        super(DateForm, self).__init__(*args, **kwargs)
+        self.fields['appointment_date'].widget.attrs.update({'placeholder': 'Select date...'})

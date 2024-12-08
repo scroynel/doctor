@@ -81,3 +81,14 @@ class Notification(models.Model):
 
     def get_absolute_url(self):
         return reverse('doctor_detail', kwargs={'doctor_slug': self.user.doctor.slug})
+    
+
+class Appointment(models.Model):
+    appointment_date = models.DateTimeField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='doctor_appointments')
+    patient = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_appointments')
+
+    
+    def __str__(self):
+        return f'Doctor {self.doctor.name} - {self.appointment_date.strftime('%Y/%m/%d - %H:%M')} - {self.patient.username}'
