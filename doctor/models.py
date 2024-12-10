@@ -92,3 +92,7 @@ class Appointment(models.Model):
     
     def __str__(self):
         return f'Doctor {self.doctor.name} - {self.appointment_date.strftime('%Y/%m/%d - %H:%M')} - {self.patient.username}'
+    
+    
+    class Meta:
+        ordering = ['-create_date']

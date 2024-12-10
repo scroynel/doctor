@@ -21,7 +21,7 @@
     <div class="my-12">
         <div class="bg-gray-100 rounded-xl flex items-center justify-between p-4">
             <div class="flex items-center">
-                <img width="100px" src="{{profile.photo.url}}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full rounded-full border border-gray-700">
+                <img width="100px" src="{{profile.photo.url}}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full border border-gray-700">
                 <div class="ml-6">
                     <h1 class="text-2xl">{{profile.get_full_name}} ({{profile.username}})</h1>
                     <div class="bg-gray-200 inline-block rounded-xl px-2">{{profile.email}}</div>
@@ -33,6 +33,20 @@
                 {% endif %}
                 <a href="{% url 'users:password_change' %}" class="underline">Change password</a>
             </div>
+        </div>
+    </div>
+    <div>
+        <h1>Appointment</h1>
+        <div class="p-4 bg-gray-100 rounded-xl flex gap-5">
+            {% for appoint in profile.user_appointments.all %}
+            <div class="bg-gray-300 rounded-xl text-center items-center p-4">
+                <img src="{{appoint.doctor.image.url}}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full">
+                <h1 class="text-xl">{{appoint.doctor}}</h1>
+                <hr class="border-black">
+                <p class="font-bold">{{appoint.appointment_date|date:"d M Y"}}</p>
+                <p class="font-bold">{{appoint.appointment_date|date:"H:i"}}</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
     {% if profile.doctor %}
