@@ -35,20 +35,11 @@
             </div>
         </div>
     </div>
-    <div>
-        <h1>Appointment</h1>
-        <div class="p-4 bg-gray-100 rounded-xl flex gap-5">
-            {% for appoint in profile.user_appointments.all %}
-            <div class="bg-gray-300 rounded-xl text-center items-center p-4">
-                <img src="{{appoint.doctor.image.url}}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full">
-                <h1 class="text-xl">{{appoint.doctor}}</h1>
-                <hr class="border-black">
-                <p class="font-bold">{{appoint.appointment_date|date:"d M Y"}}</p>
-                <p class="font-bold">{{appoint.appointment_date|date:"H:i"}}</p>
-            </div>
-            {% endfor %}
-        </div>
+    <!-- Appointment -->
+    <div id="appointment_list">
+        {% include 'doctor/partials/appointment_list.html' %}
     </div>
+    <!-- Doctor -->
     {% if profile.doctor %}
     <h1 class="text-xl mt-10">User's Doctor</h1>
     <div class="my-3">

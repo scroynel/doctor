@@ -37,4 +37,6 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ['id', 'message', 'user', 'time_create', 'is_read']
 
 
-admin.site.register(Appointment)
+@admin.register(Appointment)
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'appointment_date', 'doctor', 'patient', 'create_date']

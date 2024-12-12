@@ -1,6 +1,6 @@
 from django.db.models.base import Model as Model
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, FormView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponseRedirect
 from django.http import HttpResponseForbidden, HttpResponse
@@ -77,14 +77,6 @@ class DoctorDetailView(DetailView, FormMixin):
             else:
                 return self.form_invalid(form_class)
 
-    # def form_valid(self, form):
-    #     # f = form.save(commit=False)
-    #     # f.doctor = self.get_object()
-    #     # f.from_user = self.request.user
-    #     # f.save()
-    #     # Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.')  
-    #     return super(DoctorDetailView, self).form_valid(form)
-     
 
 @method_decorator(only_for_doctors('Doctors'), 'dispatch')
 class DoctorAddView(LoginRequiredMixin, CreateView):
@@ -128,3 +120,10 @@ class DoctorsBySpecialty(ListView):
 
     def get_queryset(self):
         return Doctor.objects.filter(specialty__slug=self.kwargs['specialty_slug'])
+    
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def appointment_delete(request, pk):
+    Appointment.objects.filter(pk=pk).delete()
+    return render(request, 'doctor/partials/appointment_list.html', {'profile': request.user})
