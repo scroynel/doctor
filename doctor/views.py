@@ -61,7 +61,7 @@ class DoctorDetailView(DetailView, FormMixin):
                 f.from_user = self.request.user
                 f.save()
                 Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.') 
-                return redirect('main')
+                return render(request, 'doctor/partials/comment_list.html', {'doctor': self.object})
             else:
                 return self.form_invalid(form_class)
         else:
@@ -76,7 +76,6 @@ class DoctorDetailView(DetailView, FormMixin):
                 return redirect('users:profile', request.user.id)
             else:
                 return self.form_invalid(form_class)
-
 
 @method_decorator(only_for_doctors('Doctors'), 'dispatch')
 class DoctorAddView(LoginRequiredMixin, CreateView):

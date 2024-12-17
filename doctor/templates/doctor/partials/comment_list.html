@@ -1,0 +1,28 @@
+{% if doctor.comments.exists %}
+    {% for c in doctor.comments.all %}
+        <div class="bg-white rounded-xl p-4 mt-5">
+            <div class="flex justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="{{c.from_user.photo.url}}" alt="" class="w-[75px] h-[75px] object-cover object-top rounded-full border border-gray-700">
+                    <p>{{c.from_user.get_full_name}}</p>
+                </div>
+                <div>
+                    <div>
+                        <span class="fa fa-star color-off {% if c.star > 0 %}color-on{% endif %}"></span>
+                        <span class="fa fa-star color-off {% if c.star > 1 %}color-on{% endif %}"></span>
+                        <span class="fa fa-star color-off {% if c.star > 2 %}color-on{% endif %}"></span>
+                        <span class="fa fa-star color-off {% if c.star > 3 %}color-on{% endif %}"></span>
+                        <span class="fa fa-star color-off {% if c.star > 4 %}color-on{% endif %}"></span>
+                    </div>
+                    <p>{{c.time_create|date:'d M Y'}}</p>
+                </div>
+            </div>
+            <div>{{c.description}}</div>
+            <div>
+                <p class="text-gray-300 text-right">{{c.time_create|date:'H:i'}}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="mt-12">No comments yet.</p>
+{% endif %}
