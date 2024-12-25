@@ -5,6 +5,17 @@ import random
 from django.urls import reverse
 
 
+WEEKDAYS = (
+    (1, "Monday"),
+    (2, "Tuesday"),
+    (3, "Wednesday"),
+    (4, "Thursday"),
+    (5, "Friday"),
+    (6, "Saturday"),
+    (7, "Sunday"),
+)
+
+
 # Number of doctor
 def number_of_doctor():
     return random.randint(100000, 999999)
@@ -95,4 +106,16 @@ class Appointment(models.Model):
     
     
     class Meta:
-        ordering = ['-create_date']
+        ordering = ['create_date']
+
+
+class WorkingHours(models.Model):
+    doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE)
+    weekday = models.IntegerField(choices=WEEKDAYS, unique=True)
+    from_time = models.TimeField()
+    to_time = models.TimeField()
+
+    
+    class Meta:
+        verbose_name = 'Working hour'
+        verbose_name_plural = 'Working hours'

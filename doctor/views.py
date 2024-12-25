@@ -9,6 +9,7 @@ from .forms import DoctorAddFrom, CommentAddFrom, DateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from .decorators import only_for_doctors
+import json
 
 
 class MainView(ListView):
@@ -43,6 +44,7 @@ class DoctorDetailView(DetailView, FormMixin):
             context['form'] = self.form_class()
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
+        context['time_list'] = json.dumps(['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'])
         return context
     
 

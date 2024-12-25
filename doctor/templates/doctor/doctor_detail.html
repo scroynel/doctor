@@ -95,14 +95,30 @@
 
 {% block script %}
 <script>
-    const minimalDate = new Date()
+    let currentDate = new Date()
+    let minimalDate = currentDate.setDate(currentDate.getDate() + 1)
+
+    let logic = function( currentDateTime ){
+        if( currentDateTime.getDay()==5 ){
+            this.setOptions({
+            allowTimes: ['10:00', '11:00', '12:00', '13:00']
+            });
+        }else
+            this.setOptions({
+            allowTimes: ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00']
+            });
+    };
 
     $(function () {
         $("#id_appointment_date").datetimepicker({
             minDate: minimalDate,
-            allowTimes: [
-                '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'
-            ]
+            // allowTimes: JSON.parse('{{time_list|escapejs}}'),
+            onGenerate:function( ct ){
+                jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+                .addClass('xdsoft_disabled');
+            },
+            onChangeDateTime: logic,
+            onShow: logic
         });
     });
 
