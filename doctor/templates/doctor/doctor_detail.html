@@ -95,14 +95,42 @@
 
 {% block script %}
 <script>
-    const minimalDate = new Date()
+    let currentDate = new Date()
+    let minimalDate = currentDate.setDate(currentDate.getDate() + 1)
+
+    let logic = function( currentDateTime ){
+        if(currentDateTime.getDay()==1){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday1|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==2){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday2|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==3){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday3|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==4){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday4|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==5){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday5|escapejs}}')
+            })
+        }
+    };
 
     $(function () {
         $("#id_appointment_date").datetimepicker({
             minDate: minimalDate,
-            allowTimes: [
-                '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'
-            ]
+            onGenerate:function( ct ){
+                jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+                .addClass('xdsoft_disabled');
+            },
+            onChangeDateTime: logic,
+            onShow: logic
         });
     });
 

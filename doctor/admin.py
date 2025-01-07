@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Doctor, Specialty, DoctorFeedback, Notification, Appointment
+from .models import Doctor, Specialty, DoctorFeedback, Notification, Appointment, WorkingHours
 
 
 @admin.register(Doctor)
@@ -40,3 +40,9 @@ class NotificationAdmin(admin.ModelAdmin):
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ['id', 'appointment_date', 'doctor', 'patient', 'create_date']
+
+
+@admin.register(WorkingHours)
+class WorkingHoursAdmin(admin.ModelAdmin):
+    list_display = ['id', 'doctor', 'weekday', 'from_time', 'to_time']
+
