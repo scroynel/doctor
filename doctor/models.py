@@ -110,10 +110,14 @@ class Appointment(models.Model):
 
 
 class WorkingHours(models.Model):
-    doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE)
+    doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, related_name='work_hours')
     weekday = models.IntegerField(choices=WEEKDAYS, unique=True)
     from_time = models.TimeField()
     to_time = models.TimeField()
+
+
+    def __str__(self):
+        return f'{self.doctor} -- {self.weekday} day of the week -- from {self.from_time} to {self.to_time}'
 
     
     class Meta:

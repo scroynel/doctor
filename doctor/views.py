@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from .decorators import only_for_doctors
 import json
-
+import pandas as pd 
 
 class MainView(ListView):
     model = Doctor
@@ -44,13 +44,24 @@ class DoctorDetailView(DetailView, FormMixin):
             context['form'] = self.form_class()
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
-        context['time_list'] = json.dumps(['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'])
+        context['time_list'] = self.get_object().work_hours.all
+        for i in self.get_object().work_hours.all():
+            context[f'weekday{i.weekday}'] = json.dumps(self.list_of_working_hours(i.from_time.strftime('%H:%M'), i.to_time.strftime('%H:%M')))
         return context
     
 
+    #create list of workng hours for a doctor (This is need for datetimepicker appointments)
+    @staticmethod
+    def list_of_working_hours(from_time, to_time):
+        result = pd.date_range(from_time, to_time, freq='60min').strftime('%H:%M')
+        # for time in range(from_time.hour, to_time.hour + 1):
+        #     result.append(datetime.time(time, from_time.minute).strftime('%H:%M'))
+        return list(result)
+
+
     def form_invalid(self, **kwargs):
         return self.render_to_response(self.get_context_data(**kwargs))
-
+    
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

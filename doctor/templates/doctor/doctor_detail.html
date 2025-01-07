@@ -3,6 +3,8 @@
 {% block title %}{{doctor.name}} {{doctor.surname}}{% endblock %}
 
 {% block content %}
+{{weekday1}}
+{{weekday4}}
 <div class="max-w-screen-xl mx-auto p-4">
     <div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
         {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
@@ -99,20 +101,32 @@
     let minimalDate = currentDate.setDate(currentDate.getDate() + 1)
 
     let logic = function( currentDateTime ){
-        if( currentDateTime.getDay()==5 ){
+        if(currentDateTime.getDay()==1){
             this.setOptions({
-            allowTimes: ['10:00', '11:00', '12:00', '13:00']
-            });
-        }else
+                allowTimes: JSON.parse('{{weekday1|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==2){
             this.setOptions({
-            allowTimes: ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00']
-            });
+                allowTimes: JSON.parse('{{weekday2|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==3){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday3|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==4){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday4|escapejs}}')
+            })
+        } else if (currentDateTime.getDay()==5){
+            this.setOptions({
+                allowTimes: JSON.parse('{{weekday5|escapejs}}')
+            })
+        }
     };
 
     $(function () {
         $("#id_appointment_date").datetimepicker({
             minDate: minimalDate,
-            // allowTimes: JSON.parse('{{time_list|escapejs}}'),
             onGenerate:function( ct ){
                 jQuery(this).find('.xdsoft_date.xdsoft_weekend')
                 .addClass('xdsoft_disabled');
