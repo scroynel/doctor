@@ -8,6 +8,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 
+from doctor.models import Appointment
+import datetime
+
 
 class LoginUser(LoginView):
     template_name = 'users/login.html'
@@ -37,10 +40,23 @@ class RegisterUser(CreateView):
 class ProfileUser(DetailView):
     template_name = 'users/profile.html'
     context_object_name = 'profile'
-    
+
 
     def get_object(self):
+        self.appoitments_list(self.request.user)
         return get_object_or_404(get_user_model(), pk=self.kwargs[self.pk_url_kwarg])
+    
+    
+    # Appointments list only with appointment date < current time, if current time > appointment date --> delete an appointment
+    @staticmethod
+    def appoitments_list(user):
+        user_appointments = Appointment.objects.filter(patient=user)
+        for appointment in user_appointments:
+            if appointment.appointment_date.date() < datetime.datetime.now().date():
+                if appointment.appointment_date.time() < datetime.datetime.now().time():
+                    print('delete')
+                    appointment.delete()
+        return user_appointments
     
 
 class UserPasswordChangeView(PasswordChangeView):

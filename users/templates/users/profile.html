@@ -3,7 +3,7 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-
+{{appointments}}
 <div class="max-w-screen-xl mx-auto p-4">
     <div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
         {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
