@@ -106,7 +106,7 @@ class Appointment(models.Model):
     
     
     class Meta:
-        ordering = ['create_date']
+        ordering = ['appointment_date']
 
 
 class WorkingHours(models.Model):

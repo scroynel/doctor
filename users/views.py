@@ -54,7 +54,6 @@ class ProfileUser(DetailView):
         for appointment in user_appointments:
             if appointment.appointment_date.date() < datetime.datetime.now().date():
                 if appointment.appointment_date.time() < datetime.datetime.now().time():
-                    print('delete')
                     appointment.delete()
         return user_appointments
     

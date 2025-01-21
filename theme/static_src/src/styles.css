@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* scrollmenu for the appointments of a doctor  */
+.scrollmenu::-webkit-scrollbar{
+    display: block;
+}

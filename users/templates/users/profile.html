@@ -3,7 +3,6 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-{{appointments}}
 <div class="max-w-screen-xl mx-auto p-4">
     <div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
         {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
@@ -36,9 +35,11 @@
         </div>
     </div>
     <!-- Appointment -->
+    {% if profile|has_group:'Patients' %}
     <div id="appointment_list">
         {% include 'doctor/partials/appointment_list.html' %}
     </div>
+    {% endif %}
     <!-- Doctor -->
     {% if profile.doctor %}
     <h1 class="text-xl mt-10">User's Doctor</h1>
@@ -58,23 +59,30 @@
             </div>
         </div>
     </div>
-    {% if profile.notification %}
-    <div>
-        <h1 class="text-xl mt-10">Notifications</h1>
-        {% for n in profile.notification.all %}
-        <a href="{{profile.notification.get_absolute_url}}">
-            {% if n.is_read %}
-            <div class="my-3 p-2 bg-gray-100 rounded-xl flex justify-between">
-            {% else %}
-            <div class="my-3 p-2 bg-blue-600 text-white rounded-xl flex justify-between">
-            {% endif %}
-                <div>{{n.message}}</div>
-                <div class="text-gray-400">{{n.time_create|date:'d M Y - H:i'}}</div>
-            </div> 
-        </a>
-        {% endfor %}
-    </div>
-    {% endif %}
+        {% if profile.doctor.doctor_appointments %}
+            <div class="scrollmenu overflow-auto whitespace-nowrap space-x-4">
+                {% for appointment in profile.doctor.doctor_appointments.all %}
+                    <a href="#" onclick="return false" class="bg-yellow-400 p-4 inline-block rounded-xl">{{appointment.appointment_date|date:"H:i d M Y"}} - {{appointment.patient.get_full_name}}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if profile.notification %}
+        <div class=" scrollmenu overflow-auto h-[300px] mt-10">
+            <h1 class="text-xl">Notifications</h1>
+            {% for n in profile.notification.all %}
+            <a href="#" onclick="return false">
+                {% if n.is_read %}
+                <div class="my-3 p-2 bg-gray-100 rounded-xl flex justify-between">
+                {% else %}
+                <div class="my-3 p-2 bg-blue-600 text-white rounded-xl flex justify-between">
+                {% endif %}
+                    <div>{{n.message}}</div>
+                    <div class="text-gray-400">{{n.time_create|date:'d M Y - H:i'}}</div>
+                </div> 
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}

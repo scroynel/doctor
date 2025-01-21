@@ -80,8 +80,6 @@ class DoctorDetailView(DetailView, FormMixin):
         else:
             form_class = self.second_form_class(request.POST)
             if form_class.is_valid():
-                print(form_class)
-                print('form_class')
                 f = form_class.save(commit=False)
                 f.doctor = self.get_object()
                 f.patient = request.user
