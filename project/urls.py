@@ -21,10 +21,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from debug_toolbar.toolbar import debug_toolbar_urls
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('doctor.urls')),
     path('users/', include('users.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + debug_toolbar_urls()
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+
+
+if settings.DEBUG: 
+    urlpatterns += debug_toolbar_urls()

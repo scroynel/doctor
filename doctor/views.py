@@ -12,6 +12,8 @@ from .decorators import only_for_doctors
 import json
 import pandas as pd 
 
+from .red_cch import get_data
+
 class MainView(ListView):
     model = Doctor
     template_name = 'doctor/main.html'
@@ -19,7 +21,9 @@ class MainView(ListView):
     
 
     def get_queryset(self):
-        return Doctor.objects.all()
+        data = Doctor.objects.prefetch_related('specialty').all()
+        return get_data(data)
+        # return Doctor.objects.all()
     
 
 class DoctorDetailView(DetailView, FormMixin):
@@ -129,7 +133,7 @@ class DoctorsBySpecialty(ListView):
 
 
     def get_queryset(self):
-        return Doctor.objects.filter(specialty__slug=self.kwargs['specialty_slug'])
+        return Doctor.objects.prefetch_related('specialty').filter(specialty__slug=self.kwargs['specialty_slug'])
     
 from django.views.decorators.csrf import csrf_exempt
 
