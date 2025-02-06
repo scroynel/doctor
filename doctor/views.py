@@ -2,8 +2,7 @@ from django.db.models.base import Model as Model
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
-from django.shortcuts import get_object_or_404, redirect, render, HttpResponseRedirect
-from django.http import HttpResponseForbidden, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import Doctor, number_of_doctor, Notification, Appointment
 from .forms import DoctorAddFrom, CommentAddFrom, DateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +10,8 @@ from django.utils.decorators import method_decorator
 from .decorators import only_for_doctors
 import json
 import pandas as pd 
+
+from django.core.exceptions import ObjectDoesNotExist
 
 from .red_cch import get_data
 
@@ -21,9 +22,8 @@ class MainView(ListView):
     
 
     def get_queryset(self):
-        data = Doctor.objects.prefetch_related('specialty').all()
-        return get_data(data)
-        # return Doctor.objects.all()
+        doctors = Doctor.objects.prefetch_related('specialty').filter()
+        return get_data(doctors)
     
 
 class DoctorDetailView(DetailView, FormMixin):
@@ -35,7 +35,7 @@ class DoctorDetailView(DetailView, FormMixin):
     second_form_class = DateForm
 
     def get_object(self):
-        return get_object_or_404(Doctor, slug=self.kwargs[self.slug_url_kwarg])
+        return Doctor.objects.prefetch_related('comments__from_user').get(slug=self.kwargs[self.slug_url_kwarg])
     
 
     def get_success_url(self):
@@ -133,7 +133,8 @@ class DoctorsBySpecialty(ListView):
 
 
     def get_queryset(self):
-        return Doctor.objects.prefetch_related('specialty').filter(specialty__slug=self.kwargs['specialty_slug'])
+        doctors =  Doctor.objects.prefetch_related('specialty').filter(specialty__slug=self.kwargs['specialty_slug'])
+        return doctors
     
 from django.views.decorators.csrf import csrf_exempt
 

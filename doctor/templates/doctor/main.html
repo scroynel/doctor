@@ -10,7 +10,7 @@
     <div class="max-w-screen-xl h-60 mx-auto my-12 flex rounded-md bg-gray-700 border-4 border-gray-700">
         <div class="w-1/4 bg-gray-500 overflow-hidden rounded-sm">
             <a href="{{doctor.get_absolute_url}}">
-                <img src="{{doctor.image.url}}" alt="{{ doctor.get_full_name }}">
+                <img src="{{doctor.image.url}}" alt="{{ doctor.name }} {{doctor.surname}}">
             </a>
         </div>
         <div class="w-3/4 p-8 text-white relative">
@@ -18,7 +18,7 @@
                 <a href="{{ doctor.specialty.get_absolute_url }}" class="underline underline-offset-4">Specialty: {{doctor.specialty}}</a>
             </div>
             <div>
-                <p>Name: <span class="text-2xl font-bold">{{ doctor.get_full_name }}</span></p>
+                <p>Name: <span class="text-2xl font-bold">{{ doctor.name }} {{doctor.surname}}</span></p>
                 <p>Specialty: {{doctor.specialty}}</p>
                 <p>Experiense: {{doctor.experience}} years</p>
                 <p>About: {{doctor.description|truncatewords:25}}</p>
