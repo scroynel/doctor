@@ -4,16 +4,7 @@
 
 {% block content %}
 <div class="max-w-screen-xl mx-auto p-4">
-    <div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
-        {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
-        <a class="content-center" href="{{request.META.HTTP_REFERER}}">⭠Back</a>
-        {% else %}
-        <a class="content-center" href="{% url 'main' %}">⭠Back</a>
-        {% endif %}
-        {% if doctor.owner != request.user %}
-        <button type="button" class="text-white hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-4 py-2 text-center bg-gray-600">Visit</button>
-        {% endif %}
-    </div>
+    {% include 'doctor/partials/link_back.html' %}
     <div class="flex my-20 space-x-10">
         <div class="w-1/3">
             <img class="w-[100px] h-[100px] object-cover object-top rounded-full border border-gray-700" src="{{doctor.image.url}}" alt="">
@@ -43,7 +34,7 @@
             </form> 
         </div>
         <div class="bg-gray-100 rounded-xl text-center w-2/3 px-4 pb-4">
-            <form action="" method="POST" hx-post="{% url 'doctor_detail' doctor.slug %}" hx-target="#comment_list">
+            <form action="" method="POST">
                 {% csrf_token %}
                 <div class="mt-4 w-full flex space-x-5 items-center justify-end">
                     <div><p>Select rating: </p></div>

@@ -2,8 +2,7 @@ from django.db.models.base import Model as Model
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
-from django.shortcuts import get_object_or_404, redirect, render, HttpResponseRedirect
-from django.http import HttpResponseForbidden, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import Doctor, number_of_doctor, Notification, Appointment
 from .forms import DoctorAddFrom, CommentAddFrom, DateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,6 +11,11 @@ from .decorators import only_for_doctors
 import json
 import pandas as pd 
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Prefetch
+
+from .red_cch import get_data
+
 class MainView(ListView):
     model = Doctor
     template_name = 'doctor/main.html'
@@ -19,7 +23,8 @@ class MainView(ListView):
     
 
     def get_queryset(self):
-        return Doctor.objects.all()
+        doctors = Doctor.objects.prefetch_related('specialty').filter()
+        return get_data(doctors)
     
 
 class DoctorDetailView(DetailView, FormMixin):
@@ -31,7 +36,7 @@ class DoctorDetailView(DetailView, FormMixin):
     second_form_class = DateForm
 
     def get_object(self):
-        return get_object_or_404(Doctor, slug=self.kwargs[self.slug_url_kwarg])
+        return Doctor.objects.prefetch_related('comments__from_user').get(slug=self.kwargs[self.slug_url_kwarg])
     
 
     def get_success_url(self):
@@ -70,18 +75,18 @@ class DoctorDetailView(DetailView, FormMixin):
             form_class = self.form_class(request.POST)
             if form_class.is_valid():
                 f = form_class.save(commit=False)
-                f.doctor = self.get_object()
+                f.doctor = self.object
                 f.from_user = self.request.user
                 f.save()
-                Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.') 
-                return render(request, 'doctor/partials/comment_list.html', {'doctor': self.object})
+                Notification.objects.create(user=self.object.owner, message=f'{self.request.user} left a comment for your doctor.') 
+                return redirect('doctor_detail', self.kwargs[self.slug_url_kwarg])
             else:
                 return self.form_invalid(form_class)
         else:
             form_class = self.second_form_class(request.POST)
             if form_class.is_valid():
                 f = form_class.save(commit=False)
-                f.doctor = self.get_object()
+                f.doctor = self.object
                 f.patient = request.user
                 f.save()
                 return redirect('users:profile', request.user.id)
@@ -129,7 +134,8 @@ class DoctorsBySpecialty(ListView):
 
 
     def get_queryset(self):
-        return Doctor.objects.filter(specialty__slug=self.kwargs['specialty_slug'])
+        doctors =  Doctor.objects.prefetch_related('specialty').filter(specialty__slug=self.kwargs['specialty_slug'])
+        return doctors
     
 from django.views.decorators.csrf import csrf_exempt
 

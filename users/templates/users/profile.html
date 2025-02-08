@@ -4,14 +4,7 @@
 
 {% block content %}
 <div class="max-w-screen-xl mx-auto p-4">
-    <div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
-        {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
-        <a class="content-center" href="{{request.META.HTTP_REFERER}}">⭠Back</a>
-        {% else %}
-        <a class="content-center" href="{% url 'main' %}">⭠Back</a>
-        {% endif %}
-        <button type="button" class="text-white bg-gray-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Visit</button>
-    </div>
+    {% include 'doctor/partials/link_back.html' %}
     {% if profile.doctor %}
     <h1 class="text-3xl text-center mt-10">User as a Doctor</h1>
     {% else %}

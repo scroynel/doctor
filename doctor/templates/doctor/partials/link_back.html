@@ -1,0 +1,7 @@
+<div class="flex justify-between border-double border-b-4 border-gray-700 pb-4">
+    {% if request.META.HTTP_REFERER and request.build_absolute_uri != request.META.HTTP_REFERER%}
+    <a class="content-center" href="{{request.META.HTTP_REFERER}}">⭠Back</a>
+    {% else %}
+    <a class="content-center" href="{% url 'main' %}">⭠Back</a>
+    {% endif %}
+</div>

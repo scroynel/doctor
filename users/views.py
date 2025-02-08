@@ -11,6 +11,8 @@ from django.shortcuts import get_object_or_404
 from doctor.models import Appointment
 import datetime
 
+from .models import User
+
 
 class LoginUser(LoginView):
     template_name = 'users/login.html'
@@ -44,7 +46,7 @@ class ProfileUser(DetailView):
 
     def get_object(self):
         self.appoitments_list(self.request.user)
-        return get_object_or_404(get_user_model(), pk=self.kwargs[self.pk_url_kwarg])
+        return User.objects.get(pk=self.kwargs[self.pk_url_kwarg])
     
     
     # Appointments list only with appointment date < current time, if current time > appointment date --> delete an appointment
