@@ -12,6 +12,7 @@ import json
 import pandas as pd 
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Prefetch
 
 from .red_cch import get_data
 
@@ -74,18 +75,18 @@ class DoctorDetailView(DetailView, FormMixin):
             form_class = self.form_class(request.POST)
             if form_class.is_valid():
                 f = form_class.save(commit=False)
-                f.doctor = self.get_object()
+                f.doctor = self.object
                 f.from_user = self.request.user
                 f.save()
-                Notification.objects.create(user=self.get_object().owner, message=f'{self.request.user} left a comment for your doctor.') 
-                return render(request, 'doctor/partials/comment_list.html', {'doctor': self.object})
+                Notification.objects.create(user=self.object.owner, message=f'{self.request.user} left a comment for your doctor.') 
+                return redirect('doctor_detail', self.kwargs[self.slug_url_kwarg])
             else:
                 return self.form_invalid(form_class)
         else:
             form_class = self.second_form_class(request.POST)
             if form_class.is_valid():
                 f = form_class.save(commit=False)
-                f.doctor = self.get_object()
+                f.doctor = self.object
                 f.patient = request.user
                 f.save()
                 return redirect('users:profile', request.user.id)

@@ -34,7 +34,7 @@
             </form> 
         </div>
         <div class="bg-gray-100 rounded-xl text-center w-2/3 px-4 pb-4">
-            <form action="" method="POST" hx-post="{% url 'doctor_detail' doctor.slug %}" hx-target="#comment_list">
+            <form action="" method="POST">
                 {% csrf_token %}
                 <div class="mt-4 w-full flex space-x-5 items-center justify-end">
                     <div><p>Select rating: </p></div>
