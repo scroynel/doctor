@@ -13,9 +13,9 @@
             <div class="text-red-600">{{ form.non_field_errors }}</div>
             {% for f in form %}
             <div class="mt-4 w-full">
-                {{f}}
+                {{ f }}
             </div>
-            <div class="text-red-600">{{f.errors}}</div>
+            <div class="text-red-600">{{ f.errors }}</div>
             {% endfor %}
             <p class="mt-2">Are you not register? <a href="{% url 'users:register' %}" class="underline">Register</a></p>
             <p class="mt-2">Did you forgot a password? <a href="{% url 'users:password_reset' %}" class="underline">Password confirmation</a></p>

@@ -13,10 +13,10 @@
     <div class="my-12">
         <div class="bg-gray-100 rounded-xl flex items-center justify-between p-4">
             <div class="flex items-center">
-                <img width="100px" src="{{profile.photo.url}}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full border border-gray-700">
+                <img width="100px" src="{{ profile.photo.url }}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full border border-gray-700">
                 <div class="ml-6">
-                    <h1 class="text-2xl">{{profile.get_full_name}} ({{profile.username}})</h1>
-                    <div class="bg-gray-200 inline-block rounded-xl px-2">{{profile.email}}</div>
+                    <h1 class="text-2xl">{{ profile.get_full_name }} ({{ profile.username }})</h1>
+                    <div class="bg-gray-200 inline-block rounded-xl px-2">{{ profile.email }}</div>
                 </div>
             </div>
             <div class="space-x-4">
@@ -39,11 +39,11 @@
     <div class="my-3">
         <div class="group bg-gray-100 rounded-xl flex items-center justify-between p-4 hover:bg-gray-700 hover:text-white">
             <div class="flex items-center">
-                <img src="{{profile.doctor.image.url}}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full border border-gray-700">
+                <img src="{{ profile.doctor.image.url }}" alt="" class="w-[100px] h-[100px] object-cover object-top rounded-full border border-gray-700">
                 <div class="ml-6">
-                    <h1 class="text-2xl">{{profile.doctor.name}} {{profile.doctor.surname}} ({{profile.doctor.number}}) {{profile.doctor.age}} y.o.</h1>
-                    <p>Experience: {{profile.doctor.experience}}</p>
-                    <div class="bg-gray-200 inline-block rounded-xl px-2 group-hover:bg-gray-600">{{profile.doctor.specialty}}</div>
+                    <h1 class="text-2xl">{{ profile.doctor.name }} {{ profile.doctor.surname }} ({{ profile.doctor.number }}) {{ profile.doctor.age }} y.o.</h1>
+                    <p>Experience: {{ profile.doctor.experience }}</p>
+                    <div class="bg-gray-200 inline-block rounded-xl px-2 group-hover:bg-gray-600">{{ profile.doctor.specialty }}</div>
                 </div>
             </div>
             <div class="space-x-4">
@@ -55,7 +55,7 @@
         {% if profile.doctor.doctor_appointments %}
             <div class="scrollmenu overflow-auto whitespace-nowrap space-x-4">
                 {% for appointment in profile.doctor.doctor_appointments.all %}
-                    <a href="#" onclick="return false" class="bg-yellow-400 p-4 inline-block rounded-xl">{{appointment.appointment_date|date:"H:i d M Y"}} - {{appointment.patient.get_full_name}}</a>
+                    <a href="#" onclick="return false" class="bg-yellow-400 p-4 inline-block rounded-xl">{{ appointment.appointment_date|date:"H:i d M Y" }} - {{ appointment.patient.get_full_name }}</a>
                 {% endfor %}
             </div>
         {% endif %}
@@ -69,8 +69,8 @@
                 {% else %}
                 <div class="my-3 p-2 bg-blue-600 text-white rounded-xl flex justify-between">
                 {% endif %}
-                    <div>{{n.message}}</div>
-                    <div class="text-gray-400">{{n.time_create|date:'d M Y - H:i'}}</div>
+                    <div>{{ n.message }}</div>
+                    <div class="text-gray-400">{{ n.time_create|date:'d M Y - H:i' }}</div>
                 </div> 
             </a>
             {% endfor %}

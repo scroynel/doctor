@@ -4,8 +4,6 @@
 
 {% block content %}
 <div class="">
-
-
     <div class="w-1/4 mx-auto text-center">
         <h1 class="text-3xl">Register</h1>
         <form action="" method="POST" enctype="multipart/form-data">
@@ -14,12 +12,12 @@
             {% for f in form %}
                 {% if not forloop.last %}
                     <div class="mt-4 w-full">
-                        {{f}}
+                        {{ f }}
                     </div>
                 {% else %}
                     <div class="mt-4">
-                        <label for="{{f.id_for_label}}" class="mr-5">{{f.label}}</label>
-                        {{f}}
+                        <label for="{{f.id_for_label}}" class="mr-5">{{ f.label }}</label>
+                        {{ f }}
                     </div>
                 {% endif %}
                 <div class="text-red-600">{{ f.errors }}</div>
@@ -27,7 +25,6 @@
             <button type="submit" class="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 text-center">Register</button>
         </form>
     </div>
-
 </div>
 
 

@@ -1,6 +1,6 @@
 <div class="max-w-screen-xl m-auto flex pt-5">
     <a href="{% url 'main' %}" class="bg-gray-700 text-white p-1 rounded-lg justify-start mr-5 last:mr-0">All</a>
     {% for specialty in specialties %}
-    <a href="{{ specialty.get_absolute_url }}" class="bg-gray-700 text-white p-1 rounded-lg justify-start mr-5 last:mr-0">{{specialty.name}}</a>
+    <a href="{{ specialty.get_absolute_url }}" class="bg-gray-700 text-white p-1 rounded-lg justify-start mr-5 last:mr-0">{{ specialty.name }}</a>
     {% endfor %}
 </div>
